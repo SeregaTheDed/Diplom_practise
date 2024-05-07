@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorization</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Добро пожаловать</h2>
+    <form id="authForm">
+        <div class="input-field">
+            <label for="login">Имя пользователя:</label>
+            <input type="text" id="login" name="login" required>
+        </div>
+        <div class="input-field">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Зайти</button>
+    </form>
+    <script>
+        document.getElementById("authForm").addEventListener('submit', async event => {
+            event.preventDefault();
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                        login: document.getElementById("login").value,
+                        password: document.getElementById("password").value
+                    })
+            });
+            const user_id = await response.json();
+            if (!user_id) {
+                alert('Неправильный логин или пароль!');
+            } else {
+                localStorage.setItem('user_id', user_id);
+                window.location.href = './chat';
+            }
+
+        })
+    </script>
+
+</div>
+</body>
+</html>
