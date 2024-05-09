@@ -33,11 +33,11 @@ async def login(login_data: LoginData):
     query = f"""
         select users.id
         from users
-        where login = '{login_data.login}' and pass = '{login_data.password}'
+        where login = ? and pass = ?
 """
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
-        cursor.execute(query)
+        cursor.execute(query, (login_data.login, login_data.password))
         data = cursor.fetchall()
         if len(data) < 1:
             return None
