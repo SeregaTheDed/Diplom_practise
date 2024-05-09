@@ -55,7 +55,7 @@ async def get_message():
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         cursor.execute(query)
-        data = cursor.fetchall()  #2024-05-07 00:55:40.479811
+        data = cursor.fetchall()
         messages = list(
             map(lambda m: create_message_data(m[0], datetime.strptime(m[1], "%Y-%m-%d %H:%M:%S.%f"), m[2]), data))
         print('messages:', messages)
@@ -66,10 +66,10 @@ async def get_message():
 async def send_message(message: Message):
     query = f"""
     insert into messages(user_id, date_sent, text)
-    values ({message.user_id}, '{message.date_sent}', {message.text})
+    values (?, ?, ?)
 """
     with sqlite3.connect(db_file) as conn:
-        conn.executescript(query)
+        conn.execute(query, (message.user_id, message.date_sent, message.text))
 
 
 if __name__ == "__main__":
