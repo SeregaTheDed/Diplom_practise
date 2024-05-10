@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import bleach
 import uvicorn
 import sqlite3
 
@@ -57,7 +58,10 @@ async def get_message():
         cursor.execute(query)
         data = cursor.fetchall()
         messages = list(
-            map(lambda m: create_message_data(m[0], datetime.strptime(m[1], "%Y-%m-%d %H:%M:%S.%f"), m[2]), data))
+            map(lambda m: create_message_data(m[0],
+                datetime.strptime(m[1], "%Y-%m-%d %H:%M:%S.%f"),
+                bleach.clean(m[2], tags=[])
+            ), data))
         print('messages:', messages)
         return messages
 
